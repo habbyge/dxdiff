@@ -9,7 +9,7 @@
 
 typedef void (*fWriteDiffCallback)( void *data, size_t size, int status );
 
-size_t generateBsDiff( void *baseData, size_t baseSize, void *variantData,
-        size_t variantSize, fWriteDiffCallback callback );
+size_t generateBsDiff(void* baseData, size_t baseSize, void* variantData,
+                      size_t variantSize, fWriteDiffCallback callback );
 
 #endif //DEXPATCHER_BSDIFF_HELPER_H

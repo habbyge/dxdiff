@@ -8,7 +8,6 @@
 #include <stdio.h>
 #include <DexFile.h>
 
-void generateDiff( void *pBaseDex, size_t baseSize, void *pVariantDex,
-        size_t varSize, FILE *pOut );
+void generateDiff(void* pBaseDex, size_t baseSize, void* pVariantDex, size_t varSize, FILE* pOut);
 
 #endif //DEXPATCHER_DIFF_GENERATOR_H

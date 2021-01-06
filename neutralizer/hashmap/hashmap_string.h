@@ -22,13 +22,13 @@ extern "C" {
 
 map_string_t hashmap_string_new();
 
-int hashmap_string_put( map_string_t map, const char *key, void *value );
+int hashmap_string_put(map_string_t map, const char* key, void* value);
 
-int hashmap_string_get( map_string_t map, const char *key, void **value );
+int hashmap_string_get(map_string_t map, const char* key, void** value);
 
-void hashmap_string_free( map_string_t map );
+void hashmap_string_free(map_string_t map);
 
-size_t hashmap_string_size( map_string_t map );
+size_t hashmap_string_size(map_string_t map);
 
 #ifdef __cplusplus
 }
