@@ -16,6 +16,6 @@
  By the we end up with a base dex that has the same indices for unchanged values between
  it and the variant dex.
  */
-void neutralizeBase( DexFile *pBaseDex, const DexFile *pVariantDex );
+void neutralizeBase(DexFile* pBaseDex, const DexFile* pVariantDex);
 
 #endif //DEXPATCHER_NEUTRALIZE_H

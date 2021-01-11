@@ -8,7 +8,7 @@
 #include "neutralizer/neutralize.h"
 #include "diff_generator/diff_generator.h"
 
-static const char *progName = "dxDiff";
+static const char* progName = "dxDiff";
 
 typedef struct _Options {
   const char* baseDex;
