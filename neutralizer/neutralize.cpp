@@ -18,41 +18,41 @@ static map_t methodIdsMap;
 static void cleanup() {
   size_t total_size = 0;
   if (stringIdsMap) {
-    size_t size = hashmap_size( stringIdsMap );
+    size_t size = hashmap_size(stringIdsMap);
     total_size += size;
-    printf( "stingsMap: %zu [%zu]\n", size, size * 2 * sizeof(uint32_t));
-    hashmap_free( stringIdsMap );
+    printf("stingsMap: %zu [%zu]\n", size, size * 2 * sizeof(uint32_t));
+    hashmap_free(stringIdsMap);
   }
 
   if (typeIdsMap) {
     size_t size = hashmap_size(typeIdsMap);
     total_size += size;
-    printf( "typeIdMap: %zu [%zu]\n", size, size * 2 * sizeof(uint32_t));
-    hashmap_free( typeIdsMap );
+    printf("typeIdMap: %zu [%zu]\n", size, size * 2 * sizeof(uint32_t));
+    hashmap_free(typeIdsMap);
   }
 
   if (protoIdsMap) {
     size_t size = hashmap_size(protoIdsMap);
     total_size += size;
     printf("protoIdMap: %zu [%zu]\n", size, size * 2 * sizeof(uint32_t));
-    hashmap_free( protoIdsMap );
+    hashmap_free(protoIdsMap);
   }
 
   if (fieldIdsMap) {
     size_t size = hashmap_size(fieldIdsMap);
     total_size += size;
     printf("fieldIdMap: %zu [%zu]\n", size, size * 2 * sizeof(uint32_t));
-    hashmap_free( fieldIdsMap );
+    hashmap_free(fieldIdsMap);
   }
 
   if (methodIdsMap) {
     size_t size = hashmap_size(methodIdsMap);
     total_size += size;
     printf("methodIdMap: %zu [%zu]\n", size, size * 2 * sizeof(uint32_t));
-    hashmap_free( methodIdsMap );
+    hashmap_free(methodIdsMap);
   }
 
-  printf("total overhead: %zu [%zu]\n", total_size, total_size * 2 * sizeof( uint32_t));
+  printf("total overhead: %zu [%zu]\n", total_size, total_size * 2 * sizeof(uint32_t));
 }
 
 static void mapStringIds(const DexFile* pBaseDex, const DexFile* pVariantDex) {
@@ -75,9 +75,9 @@ static void mapStringIds(const DexFile* pBaseDex, const DexFile* pVariantDex) {
     } else {
       if (i != j) {
         hashmap_put(stringIdsMap, i, j);
-      #ifdef KDEBUG
+#ifdef KDEBUG
         fprintf(stdout, "[%d] == [%d]\n", i, j);
-      #endif
+#endif
       }
       i++;
       j++;
@@ -87,12 +87,12 @@ static void mapStringIds(const DexFile* pBaseDex, const DexFile* pVariantDex) {
 
 static void neutralizeTypeId(DexTypeId* pTypeId) {
   uint32_t newIdx;
-  if (hashmap_get(stringIdsMap, pTypeId->descriptorIdx, &newIdx ) == MAP_OK) {
+  if (hashmap_get(stringIdsMap, pTypeId->descriptorIdx, &newIdx) == MAP_OK) {
     pTypeId->descriptorIdx = newIdx;
   }
 }
 
-static void mapTypeIds( const DexFile* pBaseDex, const DexFile* pVariantDex) {
+static void mapTypeIds(const DexFile* pBaseDex, const DexFile* pVariantDex) {
   uint32_t baseTypeIdsSize = pBaseDex->pHeader->typeIdsSize;
   uint32_t variantTypeIdsSize = pVariantDex->pHeader->typeIdsSize;
 
@@ -121,11 +121,11 @@ static void mapTypeIds( const DexFile* pBaseDex, const DexFile* pVariantDex) {
     } else {
       if (i != j) {
         hashmap_put(typeIdsMap, i, j);
-      #ifdef KDEBUG
+#ifdef KDEBUG
         fprintf(stdout, "[%d] %d == [%d] %d\n", i,
                 pBaseTypeId->descriptorIdx, j,
                 pVariantTypeId->descriptorIdx);
-      #endif
+#endif
       }
       i++;
       isNeutralized = false;
@@ -171,17 +171,17 @@ static int compareFieldIds(const DexFieldId* pFieldId_1, const DexFieldId* pFiel
 
 static int compareMethodIds(DexMethodId* pBaseId, const DexMethodId* pVariantId) {
   int cmp = pBaseId->classIdx - pVariantId->classIdx;
-  if ( cmp != 0 ) {
+  if (cmp != 0) {
     return cmp;
   }
 
   cmp = pBaseId->nameIdx - pVariantId->nameIdx;
-  if ( cmp != 0 ) {
+  if (cmp != 0) {
     return cmp;
   }
 
   cmp = pBaseId->protoIdx - pVariantId->protoIdx;
-  if ( cmp != 0 ) {
+  if (cmp != 0) {
     return cmp;
   }
 
@@ -231,7 +231,7 @@ static int compareProtoIds(const DexFile* pDex_1, const DexProtoId* pProtoId_1,
   return 0;
 }
 
-static void neutralizeProtoId( const DexFile* pDex, DexProtoId* pProtoId ) {
+static void neutralizeProtoId(const DexFile* pDex, DexProtoId* pProtoId) {
   // neutralize shortIdx
   uint32_t newIdx;
   if (hashmap_get(stringIdsMap, pProtoId->shortyIdx, &newIdx) == MAP_OK) {
@@ -239,14 +239,14 @@ static void neutralizeProtoId( const DexFile* pDex, DexProtoId* pProtoId ) {
   }
 
   //neutralize return type idx
-  if ( hashmap_get(typeIdsMap, pProtoId->returnTypeIdx, &newIdx) == MAP_OK ) {
+  if (hashmap_get(typeIdsMap, pProtoId->returnTypeIdx, &newIdx) == MAP_OK) {
     pProtoId->returnTypeIdx = newIdx;
   }
 
   //neutralize parameters type idx
   DexTypeList* paramList = dexGetProtoParameters(pDex, pProtoId);
 
-  if ( paramList ) {
+  if (paramList) {
     for (uint32_t j = 0; j < paramList->size; ++j) {
       if (hashmap_get(typeIdsMap, paramList->list[j].typeIdx, &newIdx) == MAP_OK) {
         paramList->list[j].typeIdx = (uint16_t) newIdx;
@@ -280,14 +280,14 @@ static void mapProtoIds(const DexFile* pBaseDex, const DexFile* pVariantDex) {
     if (cmp < 0) {
       i++;
       isNeutralized = false;
-    } else if ( cmp > 0 ) {
+    } else if (cmp > 0) {
       j++;
     } else {
       if (i != j) {
         hashmap_put(protoIdsMap, i, j);
-      #ifdef KDEBUG
+#ifdef KDEBUG
         fprintf(stdout, "%d == %d\n", i, j);
-      #endif
+#endif
       }
       i++;
       isNeutralized = false;
@@ -307,7 +307,7 @@ static void mapProtoIds(const DexFile* pBaseDex, const DexFile* pVariantDex) {
 static void neutralizeFieldId(DexFieldId* pFieldId) {
   // neutralize typeIdx
   uint32_t newTypeIdx;
-  if (hashmap_get(typeIdsMap, pFieldId->typeIdx, &newTypeIdx ) == MAP_OK) {
+  if (hashmap_get(typeIdsMap, pFieldId->typeIdx, &newTypeIdx) == MAP_OK) {
     pFieldId->typeIdx = (uint16_t) newTypeIdx;
   }
 
@@ -326,7 +326,7 @@ static void neutralizeFieldId(DexFieldId* pFieldId) {
 
 static void neutralizeMethodId(DexMethodId* pMethodId) {
   uint32_t newIdx;
-  if (hashmap_get(typeIdsMap, pMethodId->classIdx, &newIdx ) == MAP_OK) {
+  if (hashmap_get(typeIdsMap, pMethodId->classIdx, &newIdx) == MAP_OK) {
     pMethodId->classIdx = (uint16_t) newIdx;
   }
 
@@ -334,7 +334,7 @@ static void neutralizeMethodId(DexMethodId* pMethodId) {
     pMethodId->nameIdx = newIdx;
   }
 
-  if (hashmap_get(protoIdsMap, pMethodId->protoIdx, &newIdx ) == MAP_OK) {
+  if (hashmap_get(protoIdsMap, pMethodId->protoIdx, &newIdx) == MAP_OK) {
     pMethodId->protoIdx = (uint16_t) newIdx;
   }
 }
@@ -370,9 +370,9 @@ static void neutralizeMethodIds(DexFile* pBaseDex, const DexFile* pVariantDex) {
     } else {
       if (i != j) {
         hashmap_put(methodIdsMap, i, j);
-      #ifdef KDEBUG
+#ifdef KDEBUG
         fprintf(stdout, "%d == %d\n", i, j);
-      #endif
+#endif
       }
 
       i++;
@@ -383,7 +383,7 @@ static void neutralizeMethodIds(DexFile* pBaseDex, const DexFile* pVariantDex) {
   i = lastNeutralized + 1;
 
   while (i < baseSize) {
-    DexMethodId* pBaseMethodId = dexGetMethodId( pBaseDex, i);
+    DexMethodId* pBaseMethodId = dexGetMethodId(pBaseDex, i);
     neutralizeMethodId(pBaseMethodId);
     i++;
   }
@@ -402,7 +402,7 @@ static void mapFieldIds(const DexFile* pBaseDex, const DexFile* pVariantDex) {
   bool isNeutralized = false;
 
   while (i < baseFieldIdsSize && j < variantFieldIdsSize) {
-    DexFieldId* pBaseFieldId = dexGetFieldId( pBaseDex, i);
+    DexFieldId* pBaseFieldId = dexGetFieldId(pBaseDex, i);
     if (!isNeutralized) {
       neutralizeFieldId(pBaseFieldId);
       isNeutralized = true;
@@ -419,9 +419,9 @@ static void mapFieldIds(const DexFile* pBaseDex, const DexFile* pVariantDex) {
     } else {
       if (i != j) {
         hashmap_put(fieldIdsMap, i, j);
-      #ifdef KDEBUG
+#ifdef KDEBUG
         fprintf(stdout, "%d == %d\n", i, j);
-      #endif
+#endif
       }
 
       i++;
@@ -453,14 +453,14 @@ void neutralizeClassInterfaces(const DexFile* pBseDex, const DexClassDef* pClass
 }
 
 static void neutralizeAnnotationsSet(DexFile* pDex, uint32_t offset) {
-  DexAnnotationSetItem* pSet = dexGetAnnotationSetItem( pDex, offset);
+  DexAnnotationSetItem* pSet = dexGetAnnotationSetItem(pDex, offset);
   if (!pSet) {
     return;
   }
 
   for (uint32_t i = 0; i < pSet->size; ++i) {
     uint32_t newIdx;
-    if (hashmap_get( typeIdsMap, pSet->entries[i], &newIdx ) == MAP_OK) {
+    if (hashmap_get(typeIdsMap, pSet->entries[i], &newIdx) == MAP_OK) {
       pSet->entries[i] = newIdx;
     }
   }
@@ -484,7 +484,7 @@ void neutralizeClassDefs(DexFile* pBaseDex) {
     }
 
     // source_file_idx
-    if ( hashmap_get(stringIdsMap, pClassDef->sourceFileIdx, &newIdx) == MAP_OK) {
+    if (hashmap_get(stringIdsMap, pClassDef->sourceFileIdx, &newIdx) == MAP_OK) {
       pClassDef->sourceFileIdx = newIdx;
     }
 
@@ -497,7 +497,7 @@ void neutralizeClassDefs(DexFile* pBaseDex) {
       neutralizeAnnotationsSet(pBaseDex, pDirectory->classAnnotationsOff);
 
       // annotations_off::field_annotations
-      DexFieldAnnotationsItem* pFieldItems = dexGetFieldAnnotations(pBaseDex,pDirectory);
+      DexFieldAnnotationsItem* pFieldItems = dexGetFieldAnnotations(pBaseDex, pDirectory);
       if (pFieldItems != NULL) {
         for (uint32_t j = 0; j < pDirectory->fieldsSize; ++j) {
           if (hashmap_get(typeIdsMap, pFieldItems->fieldIdx, &newIdx) == MAP_OK) {
@@ -523,7 +523,7 @@ void neutralizeClassDefs(DexFile* pBaseDex) {
       if (pParamItems != NULL) {
         for (uint32_t j = 0; j < pDirectory->parametersSize; ++j) {
           if (hashmap_get(methodIdsMap, pParamItems->methodIdx, &newIdx) == MAP_OK) {
-              pParamItems->methodIdx = newIdx;
+            pParamItems->methodIdx = newIdx;
           }
           DexAnnotationSetRefList* pRefList = dexGetParameterAnnotationSetRefList(pBaseDex, pParamItems);
           if (pRefList == NULL) {
@@ -541,7 +541,7 @@ void neutralizeClassDefs(DexFile* pBaseDex) {
     if (pData != NULL) {
       DexClassData* pClassData = dexReadAndVerifyClassData(&pData, NULL);
       if (pClassData == NULL) {
-        fprintf( stderr, "Failed to read class data\n" );
+        fprintf(stderr, "Failed to read class data\n");
         return;
       }
       // class_data_off::instance_fields

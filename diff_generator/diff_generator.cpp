@@ -29,7 +29,7 @@ void generateDiff(void* pBaseDex, size_t baseSize, void* pVariantDex, size_t var
     return;
   }
   printf("diff size to write: %zu\n", size);
-  if (fwrite( pData, size, 1, pOut ) != 1) {
+  if (fwrite(pData, size, 1, pOut) != 1) {
     fprintf(stderr, "failed to write to file\n");
     free(pData);
     return;

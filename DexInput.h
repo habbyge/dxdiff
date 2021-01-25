@@ -11,7 +11,7 @@ typedef struct _DexInput {
 
 void freeDexInput(DexInput* input) {
   if (input->isMapped) {
-    sysReleaseShmem( &input->map );
+    sysReleaseShmem(&input->map);
   }
   if (input->dexFile != NULL) {
     dexFileFree(input->dexFile);

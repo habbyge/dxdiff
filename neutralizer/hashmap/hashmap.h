@@ -6,6 +6,8 @@
 #ifndef DEXPATCHER_HASHMAP_H
 #define DEXPATCHER_HASHMAP_H
 
+#include <stdint.h>
+
 #define MAP_FULL      -1
 #define MAP_OMEM      -2
 #define MAP_NOT_FOUND -3
@@ -19,13 +21,13 @@ extern "C" {
 
 map_t hashmap_new();
 
-int hashmap_put( map_t map, uint32_t key, uint32_t value );
+int hashmap_put(map_t map, uint32_t key, uint32_t value);
 
-int hashmap_get( map_t map, uint32_t key, uint32_t *value );
+int hashmap_get(map_t map, uint32_t key, uint32_t* value);
 
-void hashmap_free( map_t map );
+void hashmap_free(map_t map);
 
-size_t hashmap_size( map_t map );
+size_t hashmap_size(map_t map);
 
 #ifdef __cplusplus
 }

@@ -26,7 +26,7 @@ map_string_t hashmap_string_new() {
     goto fail;
   }
 
-  map->data = (hashmap_string_entry*) calloc(INITIAL_SIZE, sizeof( hashmap_string_entry));
+  map->data = (hashmap_string_entry*) calloc(INITIAL_SIZE, sizeof(hashmap_string_entry));
   if (!map->data) {
     goto fail;
   }
@@ -36,36 +36,34 @@ map_string_t hashmap_string_new() {
 
   return map;
 
-fail:
+  fail:
   if (map) {
     hashmap_string_free(map);
   }
   return NULL;
 }
 
-static uint32_t hashmap_string_hash_string( const char* key ) {
-  /*
-  * java implementation of string hash function
-  * http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/String.html#hashCode()
-  */
+static uint32_t hashmap_string_hash_string(const char* key) {
+  /**
+   * java implementation of string hash function
+   * http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/String.html#hashCode()
+   */
   uint32_t result = 0;
   size_t size = strlen(key);
-
   for (int i = 0; i < size; ++i) {
     result += key[i] * (31 ^ (size - (i + 1)));
   }
-
   return result;
 }
 
 static int hashmap_string_hash(hashmap_string_map* map, const char* key) {
-  if ( map->size == map->table_size ) {
+  if (map->size == map->table_size) {
     return MAP_FULL;
   }
 
   uint32_t hash = hashmap_string_hash_string(key);
 
-  if ( map->data[hash].inUse == 0 ) {
+  if (map->data[hash].inUse == 0) {
     return hash;
   }
   if (strcmp(map->data[hash].key, key) == 0) {

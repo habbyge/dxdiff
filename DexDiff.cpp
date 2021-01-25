@@ -53,13 +53,13 @@ static int loadDexFile(const char* fileName, DexInput* input) {
 int parseArgs(int argc, char* const argv[]) {
   int arg;
   while ((arg = getopt(argc, argv, "n")) != -1) {
-    switch ( arg ) {
-    case 'n':
-      options.neutralize = 1;
-      break;
-    default:
-      fprintf(stderr, "UnRecognized parameter 'n'\n");
-      return 1;
+    switch (arg) {
+      case 'n':
+        options.neutralize = 1;
+        break;
+      default:
+        fprintf(stderr, "UnRecognized parameter 'n'\n");
+        return 1;
     }
   }
 

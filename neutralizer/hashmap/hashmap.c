@@ -22,13 +22,13 @@ typedef struct _hashmap_map {
 } hashmap_map;
 
 map_t hashmap_new() {
-  hashmap_map *map = (hashmap_map *) malloc( sizeof( hashmap_map ));
-  if ( !map ) {
+  hashmap_map* map = (hashmap_map*) malloc(sizeof(hashmap_map));
+  if (!map) {
     goto fail;
   }
 
-  map->data = (hashmap_entry *) calloc( INITIAL_SIZE, sizeof( hashmap_entry ));
-  if ( !map->data ) {
+  map->data = (hashmap_entry*) calloc(INITIAL_SIZE, sizeof(hashmap_entry));
+  if (!map->data) {
     goto fail;
   }
 
@@ -38,14 +38,14 @@ map_t hashmap_new() {
   return map;
 
   fail:
-  if ( map ) {
-    hashmap_free( map );
+  if (map) {
+    hashmap_free(map);
   }
   return NULL;
 }
 
 
-static uint32_t hashmap_hash_int( hashmap_map *map, uint32_t key ) {
+static uint32_t hashmap_hash_int(hashmap_map* map, uint32_t key) {
   /* Robert Jenkins' 32 bit Mix Function */
   key += (key << 12);
   key ^= (key >> 22);
@@ -62,18 +62,18 @@ static uint32_t hashmap_hash_int( hashmap_map *map, uint32_t key ) {
   return key % map->table_size;
 }
 
-static int hashmap_hash( hashmap_map* map, uint32_t key ) {
-  if ( map->size == map->table_size ) {
+static int hashmap_hash(hashmap_map* map, uint32_t key) {
+  if (map->size == map->table_size) {
     return MAP_FULL;
   }
 
   uint32_t hash = hashmap_hash_int(map, key);
 
   for (int i = 0; i < map->table_size; ++i) {
-    if ( map->data[hash].inUse == 0 ) {
+    if (map->data[hash].inUse == 0) {
       return hash;
     }
-    if ( map->data[hash].key == key ) {
+    if (map->data[hash].key == key) {
       return hash;
     }
     hash = (hash + 1) % map->table_size;

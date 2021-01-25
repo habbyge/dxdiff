@@ -17,7 +17,7 @@ typedef struct _DiffBuffer {
   fWriteDiffCallback callback;
 } DiffBuffer;
 
-static void initStream(DiffStream *stream, size_t buffSize) {
+static void initStream(DiffStream* stream, size_t buffSize) {
   DiffBuffer* buffer = (DiffBuffer*) stream->opaque;
   buffer->buff = (uint8_t*) malloc(buffSize);
   memset(buffer->buff, 0, buffSize);
@@ -27,7 +27,7 @@ static void initStream(DiffStream *stream, size_t buffSize) {
 }
 
 static size_t writeStream(DiffStream* stream, const void* data, size_t size) {
-  DiffBuffer *buffer = (DiffBuffer *) stream->opaque;
+  DiffBuffer* buffer = (DiffBuffer*) stream->opaque;
   if (buffer->pos + size > buffer->size) {
     fprintf(stderr, "failed to write diff stream patch. buffer overflow\n");
     buffer->status = -1;
@@ -71,7 +71,7 @@ size_t generateBsDiff(void* baseData, size_t baseSize, void* variantData,
   if (size == 0) {
     fprintf(stderr, "failed to bsdiff the stream\n");
     if (buffer.buff != NULL) {
-        free(buffer.buff);
+      free(buffer.buff);
     }
     return 0;
   }
